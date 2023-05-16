@@ -1,7 +1,7 @@
 # Podstawy Sztucznej Inteligencji - projekt<br>SIiUM 2022/23 (sem. letni)
-Projekt ma za na celu symulację ruchu miejskiego, 
-w którym określone pojazdy mają odpowiednie sterowniki umożliwiające im poruszanie się
-według określonego algorytmu
+Projekt ma na celu symulację ruchu miejskiego, 
+w którym pojazdy mają odpowiadające sobie sterowniki umożliwiające im poruszanie się
+według określonego algorytmu.
 ## Wymagania
 * Python >= 3.10.6 
 * pip >= 22.0.2
