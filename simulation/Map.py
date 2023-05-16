@@ -15,5 +15,3 @@ class Map:
         # default map generation
         return self.with_crossroads(10)
 
-    def generate(self):
-        pass
