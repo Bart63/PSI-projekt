@@ -2,6 +2,7 @@
 import sys
 from simulation.Simulation import Simulation
 
+
 def main(argv):
     # pass argv in case of debugging etc.
     sim = Simulation(argv)
