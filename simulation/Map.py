@@ -7,7 +7,7 @@ class Map:
         self.crossroads = []
 
     # builder methods e.g.
-    def with_crossroads(self, number: int, ):
+    def with_crossroads(self, number: int):
         # generate crossroads with given number matching builder pattern
         return self
 

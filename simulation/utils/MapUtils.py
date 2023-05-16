@@ -3,8 +3,8 @@ from drivers.Driver import Driver
 
 
 class Crossroad:
-    def __init__(self, _id: int, x: float, y: float):
-        self._id = _id
+    def __init__(self, id_: int, x: float, y: float):
+        self._id = id_
         self.x = x
         self.y = y
 
