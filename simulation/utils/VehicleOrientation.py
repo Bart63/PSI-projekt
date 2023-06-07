@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class VehicleOrientation(Enum):
     TOP = 1
     RIGHT = 2

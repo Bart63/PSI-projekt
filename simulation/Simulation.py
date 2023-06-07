@@ -5,7 +5,7 @@ from simulation.MapRenderer import MapRenderer
 
 class Simulation:
     def __init__(self, argv):
-        self.map = Map().default()
+        self.map = Map(size=(512, 512), seed=0)
         self.map_renderer = MapRenderer(self.map)
 
     def run(self):

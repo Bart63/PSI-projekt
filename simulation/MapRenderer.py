@@ -1,10 +1,12 @@
 from simulation.Map import Map
 import numpy as np
 
+
 class MapRenderer:
     def __init__(self, map_: Map, base_image: np.ndarray = None):
         self.base_image = base_image
         self.map_ = map_
+        self.map_.start()
 
     # render given layers of map
     def render_base(self):
