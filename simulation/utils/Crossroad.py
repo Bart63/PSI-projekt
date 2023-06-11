@@ -27,8 +27,5 @@ class Crossroad:
     def get_num_connections(self):
         return len([1 for value in list(self.connections_dirs.values()) if value != -1])
 
-    def start(self):
-        self.traffic_lights.start()
-
     def __str__(self):
         return f'{self.id} - ({self.x}, {self.y}) {len(self.connections_dirs)}'

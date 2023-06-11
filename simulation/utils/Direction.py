@@ -16,3 +16,6 @@ class Direction(Enum):
             return Direction.LEFT
         elif self == Direction.LEFT:
             return Direction.RIGHT
+
+    def is_horizontal(self):
+        return self in [Direction.RIGHT, Direction.LEFT]

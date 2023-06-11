@@ -1,5 +1,5 @@
 from simulation import Map
-from .utils import Direction
+from .utils import Direction, TrafficLights
 
 import matplotlib.pyplot as plt
 
@@ -7,6 +7,12 @@ def plot_map(map: Map, connect_lvl=2):
     connect_lvl = connect_lvl / 2
     crossroads = map.crossroads
     road_padding = map.road_padding
+
+    for crossroad in crossroads:
+        x = crossroad.x
+        y = -crossroad.y
+        plot_traffic_lights(crossroad.traffic_lights, x, y)
+
     for crossroad in crossroads:
         x = crossroad.x
         y = -crossroad.y    # Make (0,0) in upper left corner
@@ -22,10 +28,36 @@ def plot_map(map: Map, connect_lvl=2):
                     plt.plot([x, x + int(road_padding * connect_lvl)], [y, y], 'k-')  # Rightward line
                 elif direction == Direction.LEFT:
                     plt.plot([x, x - int(road_padding * connect_lvl)], [y, y], 'k-')  # Leftward line
-                    
-    for crossroad in crossroads:
-        x = crossroad.x
-        y = -crossroad.y    # Make (0,0) in upper left corner
-        plt.plot(x, y, 'ro')  # Plotting a red dot for each crossroad
 
     plt.show()
+
+
+def plot_traffic_lights(traffic_lights: TrafficLights, x, y, width=10):
+    connections_dirs = traffic_lights.connections_dirs
+    horizontal_traffic = traffic_lights.horizontal_traffic
+    vertical_traffic = traffic_lights.vertical_traffic
+
+    half_width = width / 2
+
+    center = (x, y)
+    vertices = [
+        (x - half_width, y - half_width),
+        (x + half_width, y - half_width),
+        (x + half_width, y + half_width),
+        (x - half_width, y + half_width)
+    ]
+
+    triangles = [
+        (vertices[0], vertices[1], center, Direction.DOWN),
+        (vertices[1], vertices[2], center, Direction.RIGHT),
+        (vertices[2], vertices[3], center, Direction.UP),
+        (vertices[3], vertices[0], center, Direction.LEFT)
+    ]
+
+    for *triangle_vertices, direction in triangles:
+        connection = connections_dirs[direction]
+        if connection == None:
+            continue
+        traffic_state = horizontal_traffic if direction.is_horizontal() else vertical_traffic
+        triangle_color = 'green' if traffic_state else 'red'
+        plt.fill(*zip(*triangle_vertices), color=triangle_color, zorder=10)
