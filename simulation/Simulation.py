@@ -1,6 +1,6 @@
 # manager for all drivers and the visualization
-from simulation.Map import Map
-from simulation.MapRenderer import MapRenderer
+from .Map import Map
+from .MapRenderer import MapRenderer
 
 
 class Simulation:
@@ -10,6 +10,3 @@ class Simulation:
 
     def run(self):
         print('Welcome in the Simulation!')
-        self.map_renderer.render_base()
-        self.map_renderer.render_roads()
-        self.map_renderer.render_vehicles()

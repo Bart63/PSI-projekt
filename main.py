@@ -1,6 +1,6 @@
 # main file for the simulation
 import sys
-from simulation.Simulation import Simulation
+from simulation import Simulation
 
 
 def main(argv):

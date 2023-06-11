@@ -3,8 +3,8 @@ from .TrafficLights import TrafficLights
 
 
 class Crossroad:
-    def __init__(self, id_: int, x: float, y: float):
-        self.id_ = id_
+    def __init__(self, id: int, x: float, y: float):
+        self.id = id
         self.x = x
         self.y = y
 
@@ -31,4 +31,4 @@ class Crossroad:
         self.traffic_lights.start()
 
     def __str__(self):
-        return f'{self.id_} - ({self.x}, {self.y}) {len(self.connections_dirs)}'
+        return f'{self.id} - ({self.x}, {self.y}) {len(self.connections_dirs)}'
