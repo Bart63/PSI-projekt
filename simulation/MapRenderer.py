@@ -1,5 +1,6 @@
-from simulation.Map import Map
+from .Map import Map
 import numpy as np
+
 
 class MapRenderer:
     def __init__(self, map_: Map, base_image: np.ndarray = None):

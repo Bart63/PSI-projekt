@@ -1,5 +1,5 @@
 # example implementation of driver
-from drivers.Driver import Driver
+from .Driver import Driver
 
 
 class DummyDriver(Driver):
