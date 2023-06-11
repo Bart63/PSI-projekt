@@ -1,4 +1,4 @@
-from .utils import Vehicle, Crossroad, CrossroadsGenerator
+from .utils import Vehicle, Crossroad, CrossroadsGenerator, DestinationsGenerator
 from drivers import DummyDriver
 from typing import List
 
@@ -16,6 +16,8 @@ class Map:
         crossroad_generator = CrossroadsGenerator(self.width, self.height, self.road_padding, map_filling, self.rng)
         self.crossroads = crossroad_generator.generate_crossroads()
         crossroad_generator.connect_crossroads(self.crossroads)
+
+        self.destinations = self.destinations = DestinationsGenerator.create(self.crossroads, self.rng).generate(10)
 
         self.__add_vehicles(vehicles_number)
 

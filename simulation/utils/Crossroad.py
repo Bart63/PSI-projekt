@@ -23,6 +23,9 @@ class Crossroad:
     def disconnect(self, direction: Direction):
         self.connections_dirs[direction] = -1
         self.traffic_lights.remove_dir(direction)
+    
+    def get_connections(self):
+        return list(filter(lambda conn: conn != -1, self.connections_dirs.values()))
 
     def get_num_connections(self):
         return len([1 for value in list(self.connections_dirs.values()) if value != -1])

@@ -1,5 +1,6 @@
+from typing import List
 from simulation import Map
-from .utils import Direction, TrafficLights
+from .utils import Direction, TrafficLights, Destination
 
 import matplotlib.pyplot as plt
 
@@ -7,6 +8,8 @@ def plot_map(map: Map, connect_lvl=2):
     connect_lvl = connect_lvl / 2
     crossroads = map.crossroads
     road_padding = map.road_padding
+
+    plot_destinations(map.destinations)
 
     for crossroad in crossroads:
         x = crossroad.x
@@ -61,3 +64,9 @@ def plot_traffic_lights(traffic_lights: TrafficLights, x, y, width=10):
         traffic_state = horizontal_traffic if direction.is_horizontal() else vertical_traffic
         triangle_color = 'green' if traffic_state else 'red'
         plt.fill(*zip(*triangle_vertices), color=triangle_color, zorder=10)
+
+
+def plot_destinations(destinations: List[Destination], radius=10):
+    for dest in destinations:
+        circle = plt.Circle((dest.x, -dest.y), radius, color='yellow', alpha=0.9)
+        plt.gca().add_patch(circle)

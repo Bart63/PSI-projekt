@@ -25,8 +25,8 @@ class CrossroadsGenerator:
                     continue
                 if self.__has_colliding_connection(crossroad, neighbor, direction):
                     continue
-                crossroad.connect(neighbor.id, direction)
-                neighbor.connect(crossroad.id, Direction.get_reverse(direction))
+                crossroad.connect(neighbor, direction)
+                neighbor.connect(crossroad, Direction.get_reverse(direction))
 
     def __get_crossroads_coords(self):
         points_x = np.arange(self.road_padding, self.width - self.road_padding, self.road_padding)
