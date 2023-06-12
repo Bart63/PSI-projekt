@@ -64,11 +64,15 @@ class Crossroad:
                 continue
             finished_vehicles = queue.move_closer()
             for v in finished_vehicles:
-                # TODO: Use info from vehicles' driver to choose direction
-                next_crossroad = self.connections_dirs[direction]
-                possible_directions = [direction for direction, crossroad in next_crossroad.connections_dirs.items() if crossroad != -1]
-                chosen_direction = self.rng.choice(possible_directions)
-                next_crossroad.enqueue_vehicle(v, chosen_direction)
+                self.__choose_road(v, direction)
+
+    def __choose_road(self, vehicle:Vehicle, direction: Direction):
+        next_crossroad = self.connections_dirs[direction]
+        possible_directions = [direction for direction, crossroad in next_crossroad.connections_dirs.items() if crossroad != -1]
+        chosen_direction = vehicle.get_direction_decision()
+        if chosen_direction not in possible_directions:
+            chosen_direction = self.rng.choice(possible_directions)
+        next_crossroad.enqueue_vehicle(vehicle, chosen_direction)
 
     def get_connection_directions(self):
         return [di for di, conn in self.connections_dirs.items() if conn != -1]

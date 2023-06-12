@@ -5,4 +5,3 @@ from .Driver import Driver
 class DummyDriver(Driver):
     def __init__(self):
         super().__init__()
-    # methods to discuss
