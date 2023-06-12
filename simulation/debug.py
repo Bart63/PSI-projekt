@@ -36,9 +36,8 @@ def plot_map(map: Map, connect_lvl=2):
                 elif direction == Direction.LEFT:
                     cv2.line(canvas, (x, y), (x - int(road_padding * connect_lvl), y), (0, 0, 0), 1)  # Leftward line
 
+    cv2.namedWindow('Map', cv2.WINDOW_NORMAL)
     cv2.imshow("Map", canvas)
-    cv2.waitKey(200)
-
 
 def plot_traffic_lights(traffic_lights: TrafficLights, canvas, x, y, width=10):
     connections_dirs = traffic_lights.connections_dirs
@@ -56,9 +55,9 @@ def plot_traffic_lights(traffic_lights: TrafficLights, canvas, x, y, width=10):
     ]
 
     triangles = [
-        (vertices[0], vertices[1], center, Direction.DOWN),
+        (vertices[0], vertices[1], center, Direction.UP),
         (vertices[1], vertices[2], center, Direction.RIGHT),
-        (vertices[2], vertices[3], center, Direction.UP),
+        (vertices[2], vertices[3], center, Direction.DOWN),
         (vertices[3], vertices[0], center, Direction.LEFT)
     ]
 

@@ -4,7 +4,6 @@ from typing import List
 from multiprocessing import Process
 
 import numpy as np
-from .debug import plot_map
 
 
 class Map:
@@ -14,7 +13,6 @@ class Map:
         self.width, self.height = size
         self.rng = np.random.default_rng(seed)
         self.road_padding = road_padding
-        self.child_p = None
 
         crossroad_generator = CrossroadsGenerator(self.width, self.height, self.road_padding, map_filling, self.rng)
         self.crossroads = crossroad_generator.generate_crossroads()
@@ -25,13 +23,15 @@ class Map:
         self.__add_vehicles(vehicles_number)
 
     def move_map(self):
-        if self.child_p != None:
-            self.child_p.join()
         for cr in self.crossroads:
             cr.move_vehicles()
-        self.child_p = Process(target=plot_map, args=(self,))
-        self.child_p.start()
-        
+    
+    def switch_traffic_lights(self, perc_change:float = 1):
+        perc_change = min(max(perc_change, 0), 1)
+        nb_crossroads = int(perc_change*len(self.crossroads))
+        crossroads = self.rng.choice(self.crossroads, nb_crossroads, replace=False)
+        for cr in crossroads:
+            cr.switch_traffic_lights()
 
     def __add_vehicles(self, vehicles_number):
         for id_ in range(vehicles_number):

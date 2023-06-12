@@ -1,7 +1,5 @@
-from drivers import Driver
-
-
 class Vehicle:
+    from drivers import Driver
     def __init__(self, _id: int, driver: Driver):
         self._id = _id
         self.x = None

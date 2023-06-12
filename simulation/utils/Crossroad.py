@@ -1,3 +1,5 @@
+from random import choice
+from typing import Dict
 from .Vehicle import Vehicle
 from .VehicleQueue import VehicleQueue
 from .Direction import Direction
@@ -17,7 +19,7 @@ class Crossroad:
             Direction.LEFT: -1,
         }
 
-        self.vehicle_queue = {
+        self.vehicle_queue:Dict[Direction, VehicleQueue] = {
             Direction.UP: -1,
             Direction.DOWN: -1,
             Direction.RIGHT: -1,
@@ -26,9 +28,10 @@ class Crossroad:
 
         self.traffic_lights = TrafficLights()
 
-    def connect(self, crossroad, direction: Direction):
+    def connect(self, crossroad:'Crossroad', direction: Direction):
         self.connections_dirs[direction] = crossroad
-        self.vehicle_queue[direction] = VehicleQueue(self.get_distance_between(crossroad), (self.x, self.y), (crossroad.x, crossroad.y))
+        is_green_callbac = lambda: crossroad.traffic_lights.horizontal_traffic if direction in [Direction.LEFT, Direction.RIGHT] else crossroad.traffic_lights.vertical_traffic
+        self.vehicle_queue[direction] = VehicleQueue(self.get_distance_between(crossroad), (self.x, self.y), (crossroad.x, crossroad.y), is_green_callbac)
         self.traffic_lights.add_dir(direction)
     
     def get_distance_between(self, cr_other):
@@ -41,6 +44,9 @@ class Crossroad:
         self.connections_dirs[direction] = -1
         self.vehicle_queue[direction] = -1
         self.traffic_lights.remove_dir(direction)
+
+    def switch_traffic_lights(self):
+        self.traffic_lights.switch_state()
     
     def get_connections(self):
         return list(filter(lambda conn: conn != -1, self.connections_dirs.values()))
@@ -55,7 +61,11 @@ class Crossroad:
                 continue
             finished_vehicles = queue.move_closer()
             for v in finished_vehicles:
-                self.enqueue_vehicle(v, direction) # Wrong
+                # TODO: Use info from vehicles' driver to choose direction
+                next_crossroad = self.connections_dirs[direction]
+                possible_directions = [direction for direction, crossroad in next_crossroad.connections_dirs.items() if crossroad != -1]
+                chosen_direction = choice(possible_directions)
+                next_crossroad.enqueue_vehicle(v, chosen_direction)
 
     def get_connection_directions(self):
         return [di for di, conn in self.connections_dirs.items() if conn != -1]
