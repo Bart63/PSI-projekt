@@ -14,7 +14,7 @@ class CrossroadsGenerator:
 
     def generate_crossroads(self):
         crossroads_coords = self.__get_crossroads_coords()
-        return [Crossroad(i, x, y) for i, (x, y) in enumerate(crossroads_coords)]
+        return [Crossroad(i, x, y, self.rng) for i, (x, y) in enumerate(crossroads_coords)]
 
     def connect_crossroads(self, crossroads):
         self.crossroads = crossroads

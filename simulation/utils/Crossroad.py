@@ -1,4 +1,3 @@
-from random import choice
 from typing import Dict
 from .Vehicle import Vehicle
 from .VehicleQueue import VehicleQueue
@@ -7,10 +6,11 @@ from .TrafficLights import TrafficLights
 from math import sqrt
 
 class Crossroad:
-    def __init__(self, id: int, x: float, y: float):
+    def __init__(self, id: int, x: float, y: float, rng):
         self.id = id
         self.x = x
         self.y = y
+        self.rng = rng
 
         self.connections_dirs = {
             Direction.UP: -1,
@@ -64,7 +64,7 @@ class Crossroad:
                 # TODO: Use info from vehicles' driver to choose direction
                 next_crossroad = self.connections_dirs[direction]
                 possible_directions = [direction for direction, crossroad in next_crossroad.connections_dirs.items() if crossroad != -1]
-                chosen_direction = choice(possible_directions)
+                chosen_direction = self.rng.choice(possible_directions)
                 next_crossroad.enqueue_vehicle(v, chosen_direction)
 
     def get_connection_directions(self):
