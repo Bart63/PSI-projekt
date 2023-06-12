@@ -44,6 +44,9 @@ class Crossroad:
         self.connections_dirs[direction] = -1
         self.vehicle_queue[direction] = -1
         self.traffic_lights.remove_dir(direction)
+    
+    def get_connections(self):
+        return list(filter(lambda conn: conn != -1, self.connections_dirs.values()))
 
     def switch_traffic_lights(self):
         self.traffic_lights.switch_state()
