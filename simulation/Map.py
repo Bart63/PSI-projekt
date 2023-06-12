@@ -1,6 +1,7 @@
 from .utils import Vehicle, Crossroad, CrossroadsGenerator, DestinationsGenerator
 from drivers import DummyDriver
 from typing import List
+from multiprocessing import Process
 
 import numpy as np
 
@@ -21,11 +22,22 @@ class Map:
 
         self.__add_vehicles(vehicles_number)
 
-        from .debug import plot_map
-        plot_map(self)
+    def move_map(self):
+        for cr in self.crossroads:
+            cr.move_vehicles()
+    
+    def switch_traffic_lights(self, perc_change:float = 1):
+        perc_change = min(max(perc_change, 0), 1)
+        nb_crossroads = int(perc_change*len(self.crossroads))
+        crossroads = self.rng.choice(self.crossroads, nb_crossroads, replace=False)
+        for cr in crossroads:
+            cr.switch_traffic_lights()
 
     def __add_vehicles(self, vehicles_number):
         for id_ in range(vehicles_number):
-            # TODO spawn points need to be counted and orientation according to the roads
-            vehicle = Vehicle(id_, spawn_x=0, spawn_y=0, driver=DummyDriver())
+            vehicle = Vehicle(id_, driver=DummyDriver())
             self.vehicles.append(vehicle)
+            cr = self.rng.choice(self.crossroads)
+            dirs = cr.get_connection_directions()
+            di = self.rng.choice(dirs)
+            cr.enqueue_vehicle(vehicle, di)
