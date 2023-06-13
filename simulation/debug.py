@@ -9,7 +9,7 @@ def plot_map(map: Map, connect_lvl=2):
     crossroads = map.crossroads
     road_padding = map.road_padding
     canvas_size = (map.width, map.height)
-    canvas = 255 * np.ones((canvas_size[0], canvas_size[1], 3), dtype=np.uint8)
+    canvas = 255 * np.ones((canvas_size[1], canvas_size[0], 3), dtype=np.uint8)
 
     plot_vehicles(map.vehicles, canvas)
     plot_destinations(map.destinations, canvas)
