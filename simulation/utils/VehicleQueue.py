@@ -6,7 +6,7 @@ from .Vehicle import Vehicle
 PROGRESS_STEP = 1
 
 class VehicleQueue:
-    def __init__(self, road_length, start_pos, end_pos, is_green_callback, padding=0.2):
+    def __init__(self, road_length, start_pos, end_pos, is_green_callback, padding=10):
         self.start_pos = start_pos
         self.end_pos = end_pos
         self.queue:List[VehicleQueueElement] = []
@@ -25,16 +25,18 @@ class VehicleQueue:
         finished_vehicles = []
         for vqe in self.queue:
             vqe.vehicle.on_tick()
-            if vqe.progress >= 1 and not self.is_green_callback():
-                break
-            if last_progress and vqe.progress + self.padding + self.progress_step >= last_progress:
+            if vqe.progress == 1 and not self.is_green_callback():
+                last_progress = vqe.progress
                 continue
-            vqe.progress += self.progress_step
-            last_progress = min(vqe.progress, 1)
+            if last_progress and vqe.progress + (self.padding/self.road_length) + self.progress_step >= last_progress:
+                last_progress = vqe.progress
+                continue
+            vqe.progress = min(vqe.progress + self.progress_step, 1)
+            last_progress = vqe.progress
 
             vqe.vehicle.x, vqe.vehicle.y = last_progress*(self.end_pos[0] - self.start_pos[0]) + self.start_pos[0], last_progress*(self.end_pos[1] - self.start_pos[1]) + self.start_pos[1] 
 
-            if vqe.progress >= 1 and self.is_green_callback():
+            if vqe.progress == 1 and self.is_green_callback():
                 vqe.vehicle.on_road_end()
                 finished_vehicles.append(vqe.vehicle)
                 self.queue.remove(vqe)

@@ -78,4 +78,5 @@ def plot_destinations(destinations: List[Destination], canvas, radius=10):
 def plot_vehicles(vehicles: List[Vehicle], canvas, radius=10):
     for vhc in vehicles:
         center = (int(vhc.x), int(vhc.y))
-        cv2.circle(canvas, center, radius, (255, 0, 0), -1)
+        color = (0, 0, 255) if vhc.main_vehicle else (255, 0, 0)
+        cv2.circle(canvas, center, radius, color, -1)
