@@ -17,7 +17,7 @@ class Driver:
         '''First tick after switching to a new road'''
         pass
 
-    def on_tick():
+    def on_tick(self):
         '''Runs on every change of map'''
         pass
 

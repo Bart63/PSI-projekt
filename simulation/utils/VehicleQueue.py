@@ -18,21 +18,24 @@ class VehicleQueue:
     def enqueue(self, vehicle: Vehicle):
         vehicle.x, vehicle.y = self.start_pos
         self.queue.append(VehicleQueueElement(vehicle, progress=0))
+        vehicle.on_road_start()
 
     def move_closer(self):
         last_progress = None
         finished_vehicles = []
         for vqe in self.queue:
+            vqe.vehicle.on_tick()
             if vqe.progress >= 1 and not self.is_green_callback():
                 break
             if last_progress and vqe.progress + self.padding + self.progress_step >= last_progress:
                 continue
             vqe.progress += self.progress_step
-            last_progress = vqe.progress
+            last_progress = min(vqe.progress, 1)
 
             vqe.vehicle.x, vqe.vehicle.y = last_progress*(self.end_pos[0] - self.start_pos[0]) + self.start_pos[0], last_progress*(self.end_pos[1] - self.start_pos[1]) + self.start_pos[1] 
 
             if vqe.progress >= 1 and self.is_green_callback():
+                vqe.vehicle.on_road_end()
                 finished_vehicles.append(vqe.vehicle)
                 self.queue.remove(vqe)
         return finished_vehicles
