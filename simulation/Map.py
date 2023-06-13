@@ -1,7 +1,6 @@
-from .utils import Vehicle, Crossroad, CrossroadsGenerator, DestinationsGenerator
+from .utils import Vehicle, Crossroad, CrossroadsGenerator, DestinationsGenerator, Destination
 from drivers import DummyDriver
 from typing import List
-from multiprocessing import Process
 
 import numpy as np
 
@@ -9,6 +8,7 @@ import numpy as np
 class Map:
     def __init__(self, size: tuple[int, int], seed: int, road_padding=50, map_filling=.7, vehicles_number=10, driver=DummyDriver):
         self.vehicles: List[Vehicle] = []
+        self.main_vehicle: Vehicle = None
         self.crossroads: List[Crossroad] = []
         self.width, self.height = size
         self.rng = np.random.default_rng(seed)
@@ -18,7 +18,7 @@ class Map:
         self.crossroads = crossroad_generator.generate_crossroads()
         crossroad_generator.connect_crossroads(self.crossroads)
 
-        self.destinations = self.destinations = DestinationsGenerator.create(self.crossroads, self.rng).generate(10)
+        self.destinations = DestinationsGenerator.create(self.crossroads, self.rng).generate(10)
 
         self.__add_vehicles(vehicles_number)
 
@@ -33,11 +33,23 @@ class Map:
         for cr in crossroads:
             cr.switch_traffic_lights()
 
+    def __random_append_vehicle(self, vehicle):
+        cr = self.rng.choice(self.crossroads)
+        dirs = cr.get_connection_directions()
+        di = self.rng.choice(dirs)
+        cr.enqueue_vehicle(vehicle, di)
+
     def __add_vehicles(self, vehicles_number):
         for id_ in range(vehicles_number):
             vehicle = Vehicle(id_, driver=DummyDriver())
             self.vehicles.append(vehicle)
-            cr = self.rng.choice(self.crossroads)
-            dirs = cr.get_connection_directions()
-            di = self.rng.choice(dirs)
-            cr.enqueue_vehicle(vehicle, di)
+            self.__random_append_vehicle(vehicle)
+    
+    def add_main_vehicle(self, driver):
+        vehicle = Vehicle(len(self.vehicles), driver=driver, main_vehicle=True)
+        self.main_vehicle = vehicle
+        self.vehicles.append(vehicle)
+        self.__random_append_vehicle(vehicle)
+    
+    def destination_reach(self, destination:Destination):
+        self.destinations.remove(destination)

@@ -18,7 +18,7 @@ class DestinationsGenerator:
     def generate(self, nb_destinations: int) -> List[Destination]:
         chosen_crossroads:List[Crossroad] = self.rng.choice(self.crossroads, size=nb_destinations)
         chosen_roads = map(lambda cr: (cr, self.rng.choice(cr.get_connections())), chosen_crossroads)
-        destinations = [Destination(point['x'], point['y']) for point in map(self.extract_points, chosen_roads)]
+        destinations = [Destination(i, point['x'], point['y']) for i, point in enumerate(map(self.extract_points, chosen_roads))]
         return destinations
 
     def extract_points(self, road):
