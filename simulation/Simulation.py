@@ -6,7 +6,7 @@ from .Map import Map
 from .MapRenderer import MapRenderer
 from .debug import plot_map
 from .api import API
-import register as rgstr
+import config as cfg
 import cv2
 import time
 
@@ -14,7 +14,7 @@ DESTINATION_REACH_DISTANCE = 1
 
 class Simulation:
     def __init__(self, argv):
-        self.map = Map(size=(500, 500), seed=0, vehicles_number=3, map_filling=0.7)
+        self.map = Map(size=(cfg.WIDTH, cfg.HEIGHT), seed=cfg.SEED, vehicles_number=cfg.NB_DUMMY_VEHICLES, map_filling=cfg.MAP_FILLING, road_padding=cfg.ROAD_PADDING)
         self.destinations:List[Destination] = self.map.destinations
         self.map_renderer = MapRenderer(self.map)
         self.set_init_api_values()
@@ -22,15 +22,15 @@ class Simulation:
     def run(self):
         print('Welcome in the Simulation!')
 
-        self.map.add_main_vehicle(rgstr.MAIN_VEHICLE_DRIVER)
+        self.map.add_main_vehicle(cfg.MAIN_VEHICLE_DRIVER)
         self.main_vehicle:Vehicle = self.map.main_vehicle
         self.set_final_dest_api_value()
 
         start_time = time.time()
         ticks = 0
         while True:
-            if ticks % 20 == 5:
-                self.map.switch_traffic_lights(1)
+            if ticks % cfg.TRAFFIC_LIGHTS_CHANGE_TICKS == 0:
+                self.map.switch_traffic_lights(cfg.TRAFFIC_LIGHTS_CHANGE_PERC)
 
             self.update_rest_api_values()
             self.map.move_map()
@@ -38,7 +38,7 @@ class Simulation:
 
             plot_map(self.map)
 
-            cv2.waitKey(10)
+            cv2.waitKey(cfg.WAIT_MS)
             ticks += 1
 
             if not len(self.destinations):
