@@ -56,6 +56,7 @@ class Crossroad:
     
     def enqueue_vehicle(self, vehicle: Vehicle, direction: Direction):
         vehicle.current_crossroad = self
+        vehicle.x, vehicle.y = self.x, self.y
         self.vehicle_queue[direction].enqueue(vehicle)
     
     def move_vehicles(self):

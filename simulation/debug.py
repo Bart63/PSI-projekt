@@ -8,7 +8,7 @@ def plot_map(map: Map, connect_lvl=2):
     connect_lvl = connect_lvl / 2
     crossroads = map.crossroads
     road_padding = map.road_padding
-    canvas_size = (500, 500)
+    canvas_size = (map.width, map.height)
     canvas = 255 * np.ones((canvas_size[0], canvas_size[1], 3), dtype=np.uint8)
 
     plot_vehicles(map.vehicles, canvas)
@@ -72,7 +72,8 @@ def plot_traffic_lights(traffic_lights: TrafficLights, canvas, x, y, width=10):
 def plot_destinations(destinations: List[Destination], canvas, radius=10):
     for dest in destinations:
         center = (dest.x, dest.y)
-        cv2.circle(canvas, center, radius, (0, 255, 255), -1)
+        color = (255, 255, 0) if dest.is_last else (0, 255, 255)
+        cv2.circle(canvas, center, radius, color, -1)
 
 
 def plot_vehicles(vehicles: List[Vehicle], canvas, radius=10):
