@@ -4,6 +4,7 @@ from .VehicleQueue import VehicleQueue
 from .Direction import Direction
 from .TrafficLights import TrafficLights
 from math import sqrt
+import config as cfg
 
 class Crossroad:
     def __init__(self, id: int, x: float, y: float, rng):
@@ -34,7 +35,7 @@ class Crossroad:
     def connect(self, crossroad:'Crossroad', direction: Direction):
         self.connections_dirs[direction] = crossroad
         is_green_callbac = lambda: crossroad.traffic_lights.horizontal_traffic if direction in [Direction.LEFT, Direction.RIGHT] else crossroad.traffic_lights.vertical_traffic
-        self.vehicle_queue[direction] = VehicleQueue(self.get_distance_between(crossroad), (self.x, self.y), (crossroad.x, crossroad.y), is_green_callbac)
+        self.vehicle_queue[direction] = VehicleQueue(self.get_distance_between(crossroad), (self.x, self.y), (crossroad.x, crossroad.y), is_green_callbac, padding=cfg.QUEUE_PADDING)
         self.traffic_lights.add_dir(direction)
     
     def get_distance_between(self, cr_other):
