@@ -24,9 +24,12 @@ class Vehicle:
     
     def get_direction_decision(self) -> Direction:
         return self.driver.get_direction_decisions()
-    
+  
     def get_position(self):
         return self.x, self.y
+
+    def on_simulation_start(self):
+        self.driver.on_simulation_start()
 
     def on_road_start(self):
         self.driver.on_road_start()
