@@ -4,11 +4,11 @@ from drivers import DummyDriver
 MAIN_VEHICLE_DRIVER = DummyDriver()
 
 # Map config
-WIDTH = 500
+WIDTH = 800
 HEIGHT = 500
 
 # Roads config
-MAP_FILLING = 0.7
+MAP_FILLING = 0.6
 ROAD_PADDING = 50
 
 # Vehicles config
