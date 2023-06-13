@@ -13,6 +13,7 @@ class Map:
         self.width, self.height = size
         self.rng = np.random.default_rng(seed)
         self.road_padding = road_padding
+        self.last_destination = None
 
         crossroad_generator = CrossroadsGenerator(self.width, self.height, self.road_padding, map_filling, self.rng)
         self.crossroads = crossroad_generator.generate_crossroads()
@@ -53,7 +54,8 @@ class Map:
         self.__add_last_destination(vehicle)
     
     def __add_last_destination(self, main_vehicle):
-        self.destinations.append(Destination(id=len(self.destinations), x=main_vehicle.x, y=main_vehicle.y, is_last=True))
+        self.last_destination = Destination(id=len(self.destinations), x=main_vehicle.x, y=main_vehicle.y, is_last=True)
+        self.destinations.append(self.last_destination)
 
     def destination_reach(self, destination:Destination):
         self.destinations.remove(destination)

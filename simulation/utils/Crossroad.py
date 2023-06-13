@@ -28,6 +28,9 @@ class Crossroad:
 
         self.traffic_lights = TrafficLights()
 
+    def get_position(self):
+        return self.x, self.y
+
     def connect(self, crossroad:'Crossroad', direction: Direction):
         self.connections_dirs[direction] = crossroad
         is_green_callbac = lambda: crossroad.traffic_lights.horizontal_traffic if direction in [Direction.LEFT, Direction.RIGHT] else crossroad.traffic_lights.vertical_traffic
@@ -56,6 +59,8 @@ class Crossroad:
     
     def enqueue_vehicle(self, vehicle: Vehicle, direction: Direction):
         vehicle.current_crossroad = self
+        vehicle.current_direction = direction
+        vehicle.target_crossroad = self.connections_dirs[direction]
         vehicle.x, vehicle.y = self.x, self.y
         self.vehicle_queue[direction].enqueue(vehicle)
     
@@ -77,6 +82,11 @@ class Crossroad:
 
     def get_connection_directions(self):
         return [di for di, conn in self.connections_dirs.items() if conn != -1]
+    
+    def get_road_length(self, direction:Direction):
+        if self.vehicle_queue[direction] == -1:
+            raise Exception('No road in this direction')
+        return self.vehicle_queue[direction].road_length
 
     def get_num_connections(self):
         return len([1 for value in list(self.connections_dirs.values()) if value != -1])

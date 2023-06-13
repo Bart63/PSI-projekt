@@ -5,6 +5,7 @@ from .utils import Vehicle, Destination
 from .Map import Map
 from .MapRenderer import MapRenderer
 from .debug import plot_map
+from .api import API
 import register as rgstr
 import cv2
 import time
@@ -16,12 +17,14 @@ class Simulation:
         self.map = Map(size=(500, 500), seed=0, vehicles_number=3, map_filling=0.7)
         self.destinations:List[Destination] = self.map.destinations
         self.map_renderer = MapRenderer(self.map)
+        self.set_init_api_values()
 
     def run(self):
         print('Welcome in the Simulation!')
 
         self.map.add_main_vehicle(rgstr.MAIN_VEHICLE_DRIVER)
         self.main_vehicle:Vehicle = self.map.main_vehicle
+        self.set_final_dest_api_value()
 
         start_time = time.time()
         ticks = 0
@@ -29,6 +32,7 @@ class Simulation:
             if ticks % 20 == 5:
                 self.map.switch_traffic_lights(1)
 
+            self.update_rest_api_values()
             self.map.move_map()
             self.try_reach_destination()
 
@@ -63,3 +67,22 @@ class Simulation:
                 
     def end_simulation(self):
         print('Simulation ended')
+    
+    def set_init_api_values(self):
+        crossroads = self.map.crossroads
+        API.crossroads_pos_list = [(cr.x, cr.y) for cr in crossroads]
+        API.possible_directions = [cr.get_connection_directions() for cr in crossroads]
+        API.roads_length_per_crossroad = [{dir:cr.get_road_length(dir) for dir in API.possible_directions[i]} for i, cr in enumerate(crossroads)]
+
+    def set_final_dest_api_value(self):
+        final_destination = self.map.last_destination
+        API.final_destination_pos = final_destination.x, final_destination.y
+    
+    def update_rest_api_values(self):
+        API.main_vehicle_pos = self.map.main_vehicle.get_position()
+        API.main_vehicle_direction = self.map.main_vehicle.current_direction
+        API.target_crossroad_pos = self.map.main_vehicle.target_crossroad.get_position()
+        API.target_crossroad_possible_directions = self.map.main_vehicle.target_crossroad.get_connection_directions()
+        API.destinations_pos_list = [des.get_position() for des in self.destinations]
+        crossroads = self.map.crossroads
+        API.cars_on_road = [{dir:len(cr.vehicle_queue[dir].queue) for dir in API.possible_directions[i]} for i, cr in enumerate(crossroads)]

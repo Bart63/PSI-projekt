@@ -9,7 +9,9 @@ class Vehicle:
         self.y = None
         self.distance = 0
         self.driver = driver
-        self.current_crossroad = None
+        self.current_crossroad:'Crossroad' = None
+        self.current_direction = None
+        self.target_crossroad:'Crossroad' = None
         self.main_vehicle = main_vehicle
     
     def drive(self, x, y):
