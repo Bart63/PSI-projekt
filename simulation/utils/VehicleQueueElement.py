@@ -1,4 +1,6 @@
+from .Vehicle import Vehicle
+
 class VehicleQueueElement:
-    def __init__(self, vehicle, progress):
+    def __init__(self, vehicle: Vehicle, progress):
         self.vehicle = vehicle
         self.progress = progress
