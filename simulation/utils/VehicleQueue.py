@@ -1,9 +1,7 @@
 from typing import List
 from .VehicleQueueElement import VehicleQueueElement
 from .Vehicle import Vehicle
-
-
-PROGRESS_STEP = 1
+import config as cfg
 
 class VehicleQueue:
     def __init__(self, road_length, start_pos, end_pos, is_green_callback, padding=10):
@@ -11,7 +9,7 @@ class VehicleQueue:
         self.end_pos = end_pos
         self.queue:List[VehicleQueueElement] = []
         self.road_length = road_length
-        self.progress_step = PROGRESS_STEP / self.road_length
+        self.progress_step = cfg.VEHICLE_PROGRESS_STEP / self.road_length
         self.padding = padding
         self.is_green_callback = is_green_callback
 
