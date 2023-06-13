@@ -36,7 +36,7 @@ class VehicleQueue:
             new_y = last_progress*(self.end_pos[1] - self.start_pos[1]) + self.start_pos[1]
             vqe.vehicle.drive(new_x, new_y)
 
-            if vqe.progress == 1 and self.is_green_callback():():
+            if vqe.progress == 1 and self.is_green_callback():
                 vqe.vehicle.on_road_end()
                 finished_vehicles.append(vqe.vehicle)
                 self.queue.remove(vqe)

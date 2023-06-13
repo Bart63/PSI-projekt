@@ -33,6 +33,10 @@ class Simulation:
                 self.map.switch_traffic_lights(cfg.TRAFFIC_LIGHTS_CHANGE_PERC)
 
             self.update_rest_api_values()
+
+            if ticks == 0:
+                self.on_simulation_start()
+            
             self.map.move_map()
             self.try_reach_destination()
 
@@ -67,6 +71,10 @@ class Simulation:
                 
     def end_simulation(self):
         print('Simulation ended')
+
+    def on_simulation_start(self):
+        for v in self.map.vehicles:
+            v.on_simulation_start()
     
     def set_init_api_values(self):
         crossroads = self.map.crossroads
