@@ -6,7 +6,7 @@ import numpy as np
 
 
 class Map:
-    def __init__(self, size: tuple[int, int], seed: int, road_padding=50, map_filling=.7, vehicles_number=10, driver=DummyDriver):
+    def __init__(self, size: tuple[int, int], seed: int, road_padding=50, map_filling=1, vehicles_number=10, driver=DummyDriver):
         self.vehicles: List[Vehicle] = []
         self.main_vehicle: Vehicle = None
         self.crossroads: List[Crossroad] = []
@@ -34,7 +34,7 @@ class Map:
             cr.switch_traffic_lights()
 
     def __random_append_vehicle(self, vehicle):
-        cr = self.rng.choice(self.crossroads)
+        cr:Crossroad = self.rng.choice(self.crossroads)
         dirs = cr.get_connection_directions()
         di = self.rng.choice(dirs)
         cr.enqueue_vehicle(vehicle, di)
@@ -50,6 +50,10 @@ class Map:
         self.main_vehicle = vehicle
         self.vehicles.append(vehicle)
         self.__random_append_vehicle(vehicle)
+        self.__add_last_destination(vehicle)
     
+    def __add_last_destination(self, main_vehicle):
+        self.destinations.append(Destination(id=len(self.destinations), x=main_vehicle.x, y=main_vehicle.y, is_last=True))
+
     def destination_reach(self, destination:Destination):
         self.destinations.remove(destination)
