@@ -9,19 +9,24 @@ według określonego algorytmu.
 
 ### Linux
 ```shell
-pip3 install -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 ### Windows
 ```shell
-py -m pip install -r requirements.txt
+> -m pip install -r requirements.txt
 ```
 
 ## Uruchomienie aplikacji
 ### Linux
 ```shell
-python3 main.py
+$ python3 main.py
 ```
 ### Windows
 ```shell
-py main.py
+> py main.py
+```
+
+## Uruchomienie testu
+```shell
+$ python3 main.py <driver_name> <test_no>
 ```
