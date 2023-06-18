@@ -1,0 +1,41 @@
+driver_tests:
+    DummyDriver:
+#        unique test if needed
+#        Test_1:
+#            SEED: 123
+#            MAP_FILLING: 1
+#            NB_DUMMY_VEHICLES: 20
+#        Test_2:
+#            SEED: 123
+#            MAP_FILLING: 1
+#            NB_DUMMY_VEHICLES: 10
+    Driver_2:
+    Driver_3:
+    Driver_4:
+    Driver_5:
+
+default_tests:
+    Test_1:
+        SEED: 1
+        MAP_FILLING: 1
+        NB_DUMMY_VEHICLES: 10
+    Test_2:
+        SEED: 1
+        MAP_FILLING: 0.6
+        NB_DUMMY_VEHICLES: 10
+    Test_3:
+        SEED: 1
+        MAP_FILLING: 0.6
+        NB_DUMMY_VEHICLES: 50
+    Test_4:
+        SEED: 2
+        MAP_FILLING: 0.6
+        NB_DUMMY_VEHICLES: 50
+    Test_5:
+        SEED: 2
+        MAP_FILLING: 0.6
+        NB_DUMMY_VEHICLES: 80
+    Test_6:
+        SEED: 3
+        MAP_FILLING: 0.6
+        NB_DUMMY_VEHICLES: 80

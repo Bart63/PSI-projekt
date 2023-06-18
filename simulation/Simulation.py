@@ -9,11 +9,12 @@ from .api import API
 import config as cfg
 import cv2
 import time
-
+from .utils.YamlConfigParser import set_yaml_config
 DESTINATION_REACH_DISTANCE = 1
 
 class Simulation:
     def __init__(self, argv):
+        set_yaml_config('configurations.yaml', 'DummyDriver', 1)
         self.map = Map(size=(cfg.WIDTH, cfg.HEIGHT), seed=cfg.SEED, vehicles_number=cfg.NB_DUMMY_VEHICLES, map_filling=cfg.MAP_FILLING, road_padding=cfg.ROAD_PADDING)
         self.destinations:List[Destination] = self.map.destinations
         self.map_renderer = MapRenderer(self.map)
