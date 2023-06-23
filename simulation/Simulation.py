@@ -15,18 +15,20 @@ DESTINATION_REACH_DISTANCE = 1
 
 
 class Simulation:
-    def __init__(self, argv):
-        if len(argv) == 2:
-            print(argv)
-            set_yaml_config('configurations.yaml', argv[0], int(argv[1]))
+    def __init__(self, driver_name: str, test_no: int, test_type: str):
+        self.main_vehicle = None
+        if driver_name != "" and test_no != -1:
+            set_yaml_config('configurations.yaml', driver_name, test_no, test_type)
         self.map = Map(size=(cfg.WIDTH, cfg.HEIGHT), seed=cfg.SEED, vehicles_number=cfg.NB_DUMMY_VEHICLES,
                        map_filling=cfg.MAP_FILLING, road_padding=cfg.ROAD_PADDING)
         self.destinations: List[Destination] = self.map.destinations
         self.map_renderer = MapRenderer(self.map)
         self.set_init_api_values()
+        self.simulation_running = False
 
     def run(self):
         print('Welcome in the Simulation!')
+        self.simulation_running = True
 
         self.map.add_main_vehicle(cfg.MAIN_VEHICLE_DRIVER)
         self.main_vehicle: Vehicle = self.map.main_vehicle
@@ -34,7 +36,7 @@ class Simulation:
 
         start_time = time.time()
         ticks = 0
-        while True:
+        while self.simulation_running:
             if ticks % cfg.TRAFFIC_LIGHTS_CHANGE_TICKS == 0:
                 self.map.switch_traffic_lights(cfg.TRAFFIC_LIGHTS_CHANGE_PERC)
 
@@ -55,9 +57,17 @@ class Simulation:
                 break
         end_time = time.time()
         time_taken = end_time - start_time
-        print('Distance: ', self.main_vehicle.distance)
-        print('Time: ', time_taken)
+        # print('Distance: ', self.main_vehicle.distance)
+        # print('Time: ', time_taken)
         self.end_simulation()
+        return {
+            'distance': self.main_vehicle.distance,
+            'time': time_taken,
+            'ticks': ticks
+        }
+
+    def stop(self):
+        self.simulation_running = False
 
     def try_reach_destination(self):
         vx, vy = self.main_vehicle.get_position()
