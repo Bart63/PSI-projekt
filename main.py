@@ -20,7 +20,7 @@ def main(argv):
             for key, value in result.items():
                 print(f'{key}:\t{value}')
         if tests[1] > 0:
-            print('Unique TESTS')
+            print('\nUnique TESTS')
         for test in range(1, tests[1] + 1):
             simulation = Simulation(driver_to_test, test, 'unique')
             result = simulation.run()
