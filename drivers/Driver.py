@@ -16,6 +16,8 @@ class Driver:
     def on_simulation_start(self):
         '''First tick of a simulation'''
         pass
+    def on_simulation_end(self):
+        pass
 
     def on_road_start(self):
         '''First tick after switching to a new road'''

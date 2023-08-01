@@ -86,6 +86,7 @@ class Simulation:
             self.map.destination_reach(destination)
 
     def end_simulation(self):
+        self.main_vehicle.on_simulation_end()
         print('Simulation ended')
 
     def on_simulation_start(self):

@@ -33,6 +33,8 @@ class Vehicle:
 
     def on_simulation_start(self):
         self.driver.on_simulation_start()
+    def on_simulation_end(self):
+        self.driver.on_simulation_end()
 
     def on_road_start(self):
         self.driver.on_road_start()

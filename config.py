@@ -1,7 +1,7 @@
-from drivers import DummyDriver
+from drivers.DatagenDriver import DatagenDriver
 
 # Main vehicle config
-MAIN_VEHICLE_DRIVER = DummyDriver()
+MAIN_VEHICLE_DRIVER = DatagenDriver()
 
 # Map config
 WIDTH = 400
