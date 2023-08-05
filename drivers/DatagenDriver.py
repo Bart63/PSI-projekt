@@ -40,7 +40,6 @@ class DatagenDriver(Driver):
     def on_simulation_start(self):
         self.road_padding = cfg.ROAD_PADDING
         self.map_state_tensor = self.generate_map_state_tensor()
-        print(self.map_state_tensor)
 
     def on_simulation_end(self):
         last_tick = self.tick
@@ -69,13 +68,12 @@ class DatagenDriver(Driver):
 
     def on_road_end(self):
         self.update_map_tensor()
+        print(self.map_state_tensor)
         direction = get_arrow_input()
         self.direction_decisions.append(direction)
         self.map_tensors.append(self.map_state_tensor)
         self.decisions.append(direction)
         self.at_tick.append(self.tick)
-        print(self.map_state_tensor)
-        print(self.at_tick)
     def on_road_start(self):
         pass
 
@@ -83,10 +81,10 @@ class DatagenDriver(Driver):
         map_height = cfg.HEIGHT
         map_width = cfg.WIDTH
         road_padding = self.road_padding
-        grid_width = floor(map_width / road_padding-1)
-        grid_height = floor(map_height / road_padding-1)
+        grid_width = floor(map_width / road_padding)
+        grid_height = floor(map_height / road_padding)
         xroads_positions = list(API.crossroads_pos_list)
-        xroads_positions = [(int(tup[0] / road_padding)-1, int(tup[1] / road_padding)-1) for tup in xroads_positions]
+        xroads_positions = [(round(tup[0] / road_padding), round(tup[1] / road_padding)) for tup in xroads_positions]
 
         map_state_tensor = np.zeros((29, grid_height, grid_width))
 
@@ -120,33 +118,32 @@ class DatagenDriver(Driver):
 
         # CHANNELS 13-16 - DESTINTION POSITIONS
         destination_pos_list = API.destinations_pos_list[:-1]
-        destination_pos_list= [(tup[0] / road_padding - 1, tup[1] / road_padding - 1) for tup in destination_pos_list]
+        destination_pos_list= [(tup[0] / road_padding, tup[1] / road_padding) for tup in destination_pos_list]
         for pos in destination_pos_list:
-            print(pos)
             if pos[0] % 1 == 0:
-                map_state_tensor[13][ceil(pos[1])][int(pos[0])] = 1
-                map_state_tensor[15][floor(pos[1])][int(pos[0])] = 1
+                map_state_tensor[13][ceil(pos[1])][round(pos[0])] = 1
+                map_state_tensor[15][floor(pos[1])][round(pos[0])] = 1
             if pos[1] % 1 == 0:
-                map_state_tensor[14][int(pos[1])][floor(pos[0])] = 1
-                map_state_tensor[16][int(pos[1])][ceil(pos[0])] = 1
-
+                map_state_tensor[14][round(pos[1])][floor(pos[0])] = 1
+                map_state_tensor[16][round(pos[1])][ceil(pos[0])] = 1
 
 
         # CHANNEL 17 - FINAL POSITION
         pos = API.final_destination_pos
-        pos = (pos[0] / road_padding - 1, pos[1] / road_padding - 1)
-        map_state_tensor[17][int(pos[1])][int(pos[0])] = 1
+        pos = (pos[0] / road_padding, pos[1] / road_padding)
+        map_state_tensor[17][round(pos[1])][round(pos[0])] = 1
 
         #map_state_tensor[[13, 14, 15, 16]][int(pos[1])][int(pos[0])] = 0
 
         # CHANNEL 18 - 22 - VEHICLE POS
         pos = API.main_vehicle_pos
-        pos = (pos[0] / road_padding - 1, pos[1] / road_padding - 1)
-        map_state_tensor[18][int(pos[1])][int(pos[0])] = 1
+        pos = (pos[0] / road_padding , pos[1] / road_padding)
+        map_state_tensor[18][round(pos[1])][round(pos[0])] = 1
+
 
 
         direction = API.main_vehicle_direction.value
-        map_state_tensor[18+direction][int(pos[1])][int(pos[0])] = 1
+        map_state_tensor[18+direction][round(pos[1])][round(pos[0])] = 1
 
 
         # CHANNELS 23-24  CONFIG DATA
@@ -165,7 +162,7 @@ class DatagenDriver(Driver):
     def update_map_tensor(self):
         self.map_state_tensor[[5, 6, 7, 8, 13, 14, 15, 16, 18, 19, 20, 21, 22]] = np.zeros(self.map_state_tensor.shape[1:])
         xroads_positions = list(API.crossroads_pos_list)
-        xroads_positions = [(int(tup[0] / self.road_padding)-1, int(tup[1] / self.road_padding)-1) for tup in xroads_positions]
+        xroads_positions = [(round(tup[0] / self.road_padding), round(tup[1] / self.road_padding)) for tup in xroads_positions]
         cars_on_road = API.cars_on_road
         for i in range(len(xroads_positions)):
             cars_on_current_xroad = cars_on_road[i]
@@ -175,17 +172,17 @@ class DatagenDriver(Driver):
 
 
         destination_pos_list = API.destinations_pos_list[:-1]
-        destination_pos_list= [(tup[0] / self.road_padding - 1, tup[1] / self.road_padding - 1) for tup in destination_pos_list]
+        destination_pos_list= [(tup[0] / self.road_padding, tup[1] / self.road_padding) for tup in destination_pos_list]
         for pos in destination_pos_list:
             if pos[0] % 1 == 0:
-                self.map_state_tensor[13][ceil(pos[1])][int(pos[0])] = 1
-                self.map_state_tensor[15][floor(pos[1])][int(pos[0])] = 1
+                self.map_state_tensor[13][ceil(pos[1])][round(pos[0])] = 1
+                self.map_state_tensor[15][floor(pos[1])][round(pos[0])] = 1
             if pos[1] % 1 == 0:
-                self.map_state_tensor[14][int(pos[1])][floor(pos[0])] = 1
-                self.map_state_tensor[16][int(pos[1])][ceil(pos[0])] = 1
+                self.map_state_tensor[14][round(pos[1])][floor(pos[0])] = 1
+                self.map_state_tensor[16][round(pos[1])][ceil(pos[0])] = 1
 
         pos = API.main_vehicle_pos
-        pos = (pos[0] / self.road_padding - 1, pos[1] / self.road_padding - 1)
+        pos = (round(pos[0] / self.road_padding), round(pos[1] / self.road_padding))
         self.map_state_tensor[18][int(pos[1])][int(pos[0])] = 1
 
         direction = API.main_vehicle_direction.value
