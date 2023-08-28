@@ -1,7 +1,7 @@
-from drivers import DummyDriver
+from drivers import GreedyDriver
 
 # Main vehicle config
-MAIN_VEHICLE_DRIVER = DummyDriver()
+MAIN_VEHICLE_DRIVER = GreedyDriver()
 
 # Map config
 WIDTH = 250
