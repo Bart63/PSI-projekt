@@ -1,0 +1,1 @@
+CPUCT = 1   #this is the exploration rate in MCTS. No idea what is the bes parameter, needs hard testing

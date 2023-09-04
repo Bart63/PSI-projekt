@@ -1,7 +1,7 @@
-from drivers.DatagenDriver import DatagenDriver
+from drivers.SPED.SPED import SPED
 
 # Main vehicle config
-MAIN_VEHICLE_DRIVER = DatagenDriver()
+MAIN_VEHICLE_DRIVER = SPED()
 
 # Map config
 WIDTH = 400
