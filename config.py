@@ -8,14 +8,14 @@ WIDTH = 400
 HEIGHT = 400
 
 # Roads config
-MAP_FILLING = 1
+MAP_FILLING = 0.8
 ROAD_PADDING = 50
 
 # Number of destinations 
 NB_DESTINATIONS = 5
 
 # Vehicles config
-NB_DUMMY_VEHICLES = 1
+NB_DUMMY_VEHICLES = 100
 
 # Traffic lights config
 TRAFFIC_LIGHTS_CHANGE_TICKS = 40
