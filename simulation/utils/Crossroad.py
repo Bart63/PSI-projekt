@@ -1,4 +1,6 @@
 from typing import Dict
+
+from .VehicleQueueElement import VehicleQueueElement
 from .Vehicle import Vehicle
 from .VehicleQueue import VehicleQueue
 from .Direction import Direction
@@ -58,6 +60,9 @@ class Crossroad:
     def get_connections(self):
         return list(filter(lambda conn: conn != -1, self.connections_dirs.values()))
     
+    def can_enqueue(self, direction: Direction):
+        return not self.vehicle_queue[direction].is_busy()
+    
     def enqueue_vehicle(self, vehicle: Vehicle, direction: Direction):
         vehicle.current_crossroad = self
         vehicle.current_direction = direction
@@ -69,17 +74,19 @@ class Crossroad:
         for direction, queue in self.vehicle_queue.items():
             if queue == -1:
                 continue
-            finished_vehicles = queue.move_closer()
-            for v in finished_vehicles:
-                self.__choose_road(v, direction)
+            finished_vqes = queue.move_closer()
+            for vqe in finished_vqes:
+                self.__choose_road(vqe, direction)
 
-    def __choose_road(self, vehicle:Vehicle, direction: Direction):
+    def __choose_road(self, vqe:VehicleQueueElement, direction: Direction):
         next_crossroad = self.connections_dirs[direction]
         possible_directions = [direction for direction, crossroad in next_crossroad.connections_dirs.items() if crossroad != -1]
-        chosen_direction = vehicle.get_direction_decision()
+        chosen_direction = vqe.vehicle.get_direction_decision()
         if chosen_direction not in possible_directions:
             chosen_direction = self.rng.choice(possible_directions)
-        next_crossroad.enqueue_vehicle(vehicle, chosen_direction)
+        if next_crossroad.can_enqueue(chosen_direction):
+            self.vehicle_queue[direction].queue.remove(vqe)
+            next_crossroad.enqueue_vehicle(vqe.vehicle, chosen_direction)
 
     def get_connection_directions(self):
         return [di for di, conn in self.connections_dirs.items() if conn != -1]
