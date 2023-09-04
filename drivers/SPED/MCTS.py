@@ -22,6 +22,7 @@ class Mcts:
         print(f'Selecting path which starts with direction {childs[0][0]} visited {childs[0][2]} out of total {self.root.num_visits-1} iterations of MCTS, with prior probability of {childs[0][3]}')
 
     def execute_round(self):
+        print(1)
         node = self.select_node(self.root)
         self.backpropagate(node)
 

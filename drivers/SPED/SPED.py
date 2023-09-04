@@ -33,18 +33,19 @@ class SPED(Driver):
         left = self.mcts.root.initial_destinations_left
         while True:
             self.mcts.execute_round()
-            if self.mcts.root.num_visits > 0 and self.mcts.root.destinations_left < left:
+            if self.mcts.root.num_visits > 0 and (self.mcts.root.destinations_left < left or self.mcts.root.destinations_left==-1):
                 break
 
     def on_road_end(self):
         self.update_map_tensor()
-        if len(self.direction_decisions) == 0 and not self.mcts.root.is_terminal:
+        if len(self.direction_decisions) == 0:
             self.mcts = Mcts(self.map_state_tensor, self.last_direction, self.predictor)
-            self.search()
-            directions, _, _ = self.mcts.get_directions_list()
-            directions = [self.get_direction_from_idx(direction) for direction in directions]
-            self.direction_decisions += directions
-            self.mcts.print_info()
+            if not self.mcts.root.is_terminal:
+                self.search()
+                directions, _, _ = self.mcts.get_directions_list()
+                directions = [self.get_direction_from_idx(direction) for direction in directions]
+                self.direction_decisions += directions
+                self.mcts.print_info()
 
     def generate_map_state_tensor(self):
         map_height = cfg.HEIGHT
