@@ -20,7 +20,7 @@ class Simulation:
         if driver_name != "" and test_no != -1:
             set_yaml_config('configurations.yaml', driver_name, test_no, test_type)
         self.map = Map(size=(cfg.WIDTH, cfg.HEIGHT), seed=cfg.SEED, vehicles_number=cfg.NB_DUMMY_VEHICLES,
-                       map_filling=cfg.MAP_FILLING, road_padding=cfg.ROAD_PADDING)
+                       map_filling=cfg.MAP_FILLING, road_padding=cfg.ROAD_PADDING, nb_destinations=cfg.NB_DESTINATIONS)
         self.destinations: List[Destination] = self.map.destinations
         self.map_renderer = MapRenderer(self.map)
         self.set_init_api_values()

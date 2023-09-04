@@ -1,14 +1,6 @@
 driver_tests:
     DummyDriver:
 #        unique test if needed
-        Test_1:
-            SEED: 123
-            MAP_FILLING: 1
-            NB_DUMMY_VEHICLES: 20
-        Test_2:
-            SEED: 123
-            MAP_FILLING: 1
-            NB_DUMMY_VEHICLES: 10
     Driver_2:
     Driver_3:
     Driver_4:
@@ -16,26 +8,20 @@ driver_tests:
 
 default_tests:
     Test_1:
-        SEED: 1
-        MAP_FILLING: 1
-        NB_DUMMY_VEHICLES: 10
     Test_2:
-        SEED: 1
-        MAP_FILLING: 0.6
-        NB_DUMMY_VEHICLES: 10
+        NB_DESTINATIONS: 60
     Test_3:
-        SEED: 1
-        MAP_FILLING: 0.6
-        NB_DUMMY_VEHICLES: 50
+        NB_DESTINATIONS: 12
+        MAP_FILLING: .72
     Test_4:
-        SEED: 2
-        MAP_FILLING: 0.6
-        NB_DUMMY_VEHICLES: 50
+        NB_DESTINATIONS: 12
+        MAP_FILLING: .72
+        NB_DUMMY_VEHICLES: 25
+        TRAFFIC_LIGHTS_CHANGE_TICKS: 35
+        TRAFFIC_LIGHTS_CHANGE_PERC: 0.7
     Test_5:
-        SEED: 2
-        MAP_FILLING: 0.6
-        NB_DUMMY_VEHICLES: 80
-    Test_6:
-        SEED: 3
-        MAP_FILLING: 0.6
-        NB_DUMMY_VEHICLES: 80
+        NB_DESTINATIONS: 20
+        MAP_FILLING: .5
+        NB_DUMMY_VEHICLES: 30
+        TRAFFIC_LIGHTS_CHANGE_TICKS: 35
+        TRAFFIC_LIGHTS_CHANGE_PERC: 0.7
