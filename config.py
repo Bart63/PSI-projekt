@@ -1,7 +1,7 @@
-from drivers import DummyDriver
+from drivers import AStarDriver
 
 # Main vehicle config
-MAIN_VEHICLE_DRIVER = DummyDriver()
+MAIN_VEHICLE_DRIVER = AStarDriver()
 
 # Map config
 WIDTH = 250
@@ -19,7 +19,7 @@ TRAFFIC_LIGHTS_CHANGE_TICKS = 40
 TRAFFIC_LIGHTS_CHANGE_PERC = 1
 
 # Simulation config
-SEED = 0
+SEED = 10
 WAIT_MS = 10
 
 # Vehicle speed
