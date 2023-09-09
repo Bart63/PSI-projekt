@@ -27,10 +27,14 @@ class AStarDriver(Driver):
         return abs(source[0] - destination[0]) + abs(source[1] - destination[1])
 
 
-    def avg(self, destinations):
+    def avg(self, new_crossroad, destinations):
         distance = 0
         routes = 1
         for i in range(len(destinations)):
+            distance += self.calculate_manhattan_distance(destinations[i], API.crossroads_pos_list[new_crossroad])
+            routes += 1
+            distance += self.calculate_manhattan_distance(destinations[i], API.final_destination_pos)
+            routes += 1
             for j in range(len(destinations)):
                 if i != j:
                     distance += self.calculate_manhattan_distance(destinations[i], destinations[j])
@@ -78,7 +82,8 @@ class AStarDriver(Driver):
 
 
     def calculate_directions(self, points_to_visit):
-        solutions = [[[self.calculate_crossroad(API.target_crossroad_pos)], 0, points_to_visit, []]]
+        solutions = [[[self.calculate_crossroad(API.target_crossroad_pos)], 0, points_to_visit, False, []]]
+        # solutions = [[[len(test_crossroads_pos_list) - 1], 0, points_to_visit, False, []]]
         while True:
             if len(solutions) == 0:
                 success = False
@@ -92,8 +97,12 @@ class AStarDriver(Driver):
             last_stage = solutions.pop(lowest_cost_index)
             crossroads = last_stage[0]
             points_to_visit = last_stage[2]
-            directions = last_stage[3]
-            if len(points_to_visit) == 0:
+            go_to_final_destination = last_stage[3]
+            directions = last_stage[4]
+            if len(points_to_visit) == 0 and not go_to_final_destination:
+                points_to_visit.append(API.final_destination_pos)
+                go_to_final_destination = True
+            elif len(points_to_visit) == 0:
                 success = True
                 solutions.insert(lowest_cost_index, last_stage)
                 break
@@ -112,14 +121,14 @@ class AStarDriver(Driver):
                     previous_crossroad = new_crossroads[i - 1]
                     crossroad = new_crossroads[i]
                     cost += self.calculate_manhattan_distance(API.crossroads_pos_list[previous_crossroad], API.crossroads_pos_list[crossroad])
-                cost += self.avg(new_points_to_visit) * len(new_points_to_visit)
-                solutions.append([new_crossroads, cost, new_points_to_visit, new_directions])
+                cost += self.avg(new_crossroad, new_points_to_visit) * len(new_points_to_visit)
+                solutions.append([new_crossroads, cost, new_points_to_visit, go_to_final_destination, new_directions])
         directions = []
         cost = sys.maxsize
         if success:
             for state in solutions:
                 if cost > state[1] and len(state[2]) == 0:
-                    directions = state[3]
+                    directions = state[4]
                     cost = state[1]
         else:
             print('Failed to calculate road')
@@ -128,5 +137,7 @@ class AStarDriver(Driver):
 
     def on_simulation_start(self):
         super().on_simulation_start()
+        destinations_pos_list = self.deep_copy(API.destinations_pos_list)
+        if API.final_destination_pos in destinations_pos_list:
+            destinations_pos_list.remove(API.final_destination_pos)
         self.direction_decisions = self.calculate_directions(API.destinations_pos_list)
-        # self.direction_decisions = [Direction.DOWN, Direction.RIGHT,  Direction.DOWN,  Direction.LEFT, Direction.DOWN, Direction.LEFT, Direction.LEFT, Direction.UP, Direction.UP, Direction.RIGHT, Direction.UP, Direction.LEFT, Direction.RIGHT]
