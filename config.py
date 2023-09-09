@@ -1,7 +1,7 @@
-from drivers import AStarDriver
+from drivers.astar.AStarDriver import AStarDriver
 
 # Main vehicle config
-MAIN_VEHICLE_DRIVER = AStarDriver()
+MAIN_VEHICLE_DRIVER = AStarDriver(40)
 
 # Map config
 WIDTH = 250
