@@ -14,7 +14,7 @@ class PathNode:
             self.visited_destinations = parentNode.visited_destinations + (destination,)
         self.approximate_distance_to_end()
     
-    def update_manhattan_distance(self, next_destination: tuple(float, float)):
+    def update_manhattan_distance(self, next_destination: tuple[float, float]):
         last_destination = self.visited_destinations[-1]
         last_next_distance = calculate_manhattan_distance(last_destination, next_destination)
         self.visited_distances.append(last_next_distance)
@@ -25,7 +25,7 @@ class PathNode:
         otherDist = other.distance_from_start + other.distance_to_end
         return selfDist < otherDist
 
-    def __contains__(self, item: tuple(float, float)):
+    def __contains__(self, item: tuple[float, float]):
         for destination in self.visited_destinations:
             if destination[0] != item[0] or destination[1] != item[1]:
                 return False
