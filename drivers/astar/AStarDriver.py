@@ -61,8 +61,6 @@ class AStarDriver(Driver):
 
     def calculate_directions(self, points_to_visit):
         solutions = [[[self.calculate_crossroad_id(API.target_crossroad_pos)], 0, points_to_visit, False, []]]
-        print(solutions)
-        # solutions = [[[len(test_crossroads_pos_list) - 1], 0, points_to_visit, False, []]]
         while True:
             if len(solutions) == 0:
                 success = False
