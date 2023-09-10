@@ -1,4 +1,3 @@
-import sys
 from simulation.api import API
 from drivers.Driver import Driver
 from simulation.utils.Direction import Direction
@@ -27,12 +26,8 @@ class AStarDriver(Driver):
         return distance / routes
 
 
-    def calculate_crossroad(self, pos):
-        for i in range(len(API.crossroads_pos_list)):
-            crossroad = API.crossroads_pos_list[i]
-            if abs(crossroad[0] - pos[0]) < 0.1 and abs(crossroad[1] - pos[1]) < 0.1:
-                return i
-        return None
+    def calculate_crossroad_id(self, crossroad_pos: tuple[float, float]):
+        return API.crossroads_pos_list.index(crossroad_pos)
 
 
     def calculate_next_crossroad(self, start_crossroad, direction, points_to_visit):
@@ -43,36 +38,37 @@ class AStarDriver(Driver):
                 point_to_visit = check_points_to_visit[i]
                 if API.crossroads_pos_list[start_crossroad][1] == point_to_visit[1] and API.crossroads_pos_list[start_crossroad][0] - road <= point_to_visit[0] <= API.crossroads_pos_list[start_crossroad][0]:
                     points_to_visit.pop(i)
-            return self.calculate_crossroad((API.crossroads_pos_list[start_crossroad][0] - road, API.crossroads_pos_list[start_crossroad][1]))
+            return self.calculate_crossroad_id((API.crossroads_pos_list[start_crossroad][0] - road, API.crossroads_pos_list[start_crossroad][1]))
         elif direction == Direction.RIGHT:
             for i in range(len(check_points_to_visit)):
                 point_to_visit = check_points_to_visit[i]
                 if API.crossroads_pos_list[start_crossroad][1] == point_to_visit[1] and API.crossroads_pos_list[start_crossroad][0] + road >= point_to_visit[0] >= API.crossroads_pos_list[start_crossroad][0]:
                     points_to_visit.pop(i)
-            return self.calculate_crossroad((API.crossroads_pos_list[start_crossroad][0] + road, API.crossroads_pos_list[start_crossroad][1]))
+            return self.calculate_crossroad_id((API.crossroads_pos_list[start_crossroad][0] + road, API.crossroads_pos_list[start_crossroad][1]))
         elif direction == Direction.UP:
             for i in range(len(check_points_to_visit)):
                 point_to_visit = check_points_to_visit[i]
                 if API.crossroads_pos_list[start_crossroad][0] == point_to_visit[0] and API.crossroads_pos_list[start_crossroad][1] - road <= point_to_visit[1] <= API.crossroads_pos_list[start_crossroad][1]:
                     points_to_visit.pop(i)
-            return self.calculate_crossroad((API.crossroads_pos_list[start_crossroad][0], API.crossroads_pos_list[start_crossroad][1] - road))
+            return self.calculate_crossroad_id((API.crossroads_pos_list[start_crossroad][0], API.crossroads_pos_list[start_crossroad][1] - road))
         else:
             for i in range(len(check_points_to_visit)):
                 point_to_visit = check_points_to_visit[i]
                 if API.crossroads_pos_list[start_crossroad][0] == point_to_visit[0] and API.crossroads_pos_list[start_crossroad][1] + road >= point_to_visit[1] >= API.crossroads_pos_list[start_crossroad][1]:
                     points_to_visit.pop(i)
-            return self.calculate_crossroad((API.crossroads_pos_list[start_crossroad][0], API.crossroads_pos_list[start_crossroad][1] + road))
+            return self.calculate_crossroad_id((API.crossroads_pos_list[start_crossroad][0], API.crossroads_pos_list[start_crossroad][1] + road))
 
 
     def calculate_directions(self, points_to_visit):
-        solutions = [[[self.calculate_crossroad(API.target_crossroad_pos)], 0, points_to_visit, False, []]]
+        solutions = [[[self.calculate_crossroad_id(API.target_crossroad_pos)], 0, points_to_visit, False, []]]
+        print(solutions)
         # solutions = [[[len(test_crossroads_pos_list) - 1], 0, points_to_visit, False, []]]
         while True:
             if len(solutions) == 0:
                 success = False
                 break
             lowest_cost_index = 0
-            lowest_cost = sys.maxsize
+            lowest_cost = float('inf')
             for solution_index in range(len(solutions)):
                 if solutions[solution_index][1] < lowest_cost:
                     lowest_cost_index = solution_index
@@ -107,7 +103,7 @@ class AStarDriver(Driver):
                 cost += self.avg(new_crossroad, new_points_to_visit) * len(new_points_to_visit)
                 solutions.append([new_crossroads, cost, new_points_to_visit, go_to_final_destination, new_directions])
         directions = []
-        cost = sys.maxsize
+        cost = float('inf')
         if success:
             for state in solutions:
                 if cost > state[1] and len(state[2]) == 0:
