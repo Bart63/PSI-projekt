@@ -1,0 +1,25 @@
+driver_tests:
+    DummyDriver:
+#        unique test if needed
+    Driver_2:
+    Driver_3:
+    Driver_4:
+    Driver_5:
+
+default_tests:
+    Test_1:
+    Test_2:
+        NB_DESTINATIONS: 60
+    Test_3:
+        NB_DESTINATIONS: 12
+        MAP_FILLING: .72
+    Test_4:
+        NB_DESTINATIONS: 12
+        MAP_FILLING: .72
+        NB_DUMMY_VEHICLES: 25
+        TRAFFIC_LIGHTS_CHANGE_TICKS: 35
+    Test_5:
+        NB_DESTINATIONS: 20
+        MAP_FILLING: .5
+        NB_DUMMY_VEHICLES: 30
+        TRAFFIC_LIGHTS_CHANGE_TICKS: 35
