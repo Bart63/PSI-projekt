@@ -74,6 +74,5 @@ class AStarDriver(Driver):
         super().on_road_end()
         cars = API.cars_on_road[API.crossroads_pos_list.index(
             API.target_crossroad_pos)][self.direction_decisions[0]]
-        print(cars)
         if cars > HEAVY_TRAFFIC_THRESHOLD:
             self.calculate_directions()
