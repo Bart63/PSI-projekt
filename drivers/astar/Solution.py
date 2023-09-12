@@ -7,7 +7,8 @@ from .config import TURN_BACK_COST_MULTIPLIER, PER_CAR_ON_ROAD_MULTIPLIER
 
 class Solution():
     def __init__(self, next_crossroad_id: int, next_direction: Direction,
-                 points_to_visit: list[tuple[float, float]],
+                 points_to_visit: list[tuple[float, float]] = [],
+                 max_points_to_visit: float = float('inf'),
                  parent_solution=None) -> None:
         if parent_solution:
             self.add_crossroad(parent_solution, next_crossroad_id,
@@ -16,10 +17,8 @@ class Solution():
                 go_to_final_destination
             self.calculate_heuristic_cost()
         else:
-            if points_to_visit is None:
-                points_to_visit = API.destinations_pos_list
             self.init_solution(next_crossroad_id, next_direction,
-                               points_to_visit)
+                               points_to_visit, max_points_to_visit)
 
     def add_crossroad(self, parent_solution,
                       new_crossroad_id: int, new_direction: Direction):
@@ -41,6 +40,7 @@ class Solution():
             + (new_crossroad_id,)
         self.directions = parent_solution.directions + (new_direction,)
 
+        self.max_points_to_visit = parent_solution.max_points_to_visit
         self.points_to_visit = []
         self.visited_points = list(parent_solution.visited_points)
         for point_to_visit in parent_solution.points_to_visit:
@@ -51,13 +51,15 @@ class Solution():
 
     def init_solution(self, next_crossroad_id: int,
                       next_direction: Direction,
-                      points_to_visit: list[tuple[float, float]]) -> None:
+                      points_to_visit: list[tuple[float, float]],
+                      max_points_to_visit: float) -> None:
         self.visited_crossroads_ids = (next_crossroad_id,)
         self.costs = (0,)
         self.cost = 0.0
         self.heuristic_cost = 0.0
-        self.visited_points = []
 
+        self.max_points_to_visit = max_points_to_visit
+        self.visited_points = []
         self.points_to_visit = list(points_to_visit)
         if API.final_destination_pos in self.points_to_visit:
             self.points_to_visit.remove(API.final_destination_pos)
@@ -69,11 +71,17 @@ class Solution():
         return self.cost + self.heuristic_cost < other.cost + \
             other.heuristic_cost
 
-    def visited_all_not_returned(self):
-        return not self.points_to_visit and not self.go_to_final_destination
-
-    def visited_all_and_returned(self):
-        return (not self.points_to_visit and self.go_to_final_destination)
+    def visited_all(self) -> bool:
+        if not self.points_to_visit and not self.go_to_final_destination:
+            if len(self.visited_points) < self.max_points_to_visit:
+                self.points_to_visit.append(API.final_destination_pos)
+                self.go_to_final_destination = True
+                return False
+            else:
+                return True
+        elif not self.points_to_visit:
+            return True
+        return False
 
     def get_last_visited_crossroad(self) -> tuple[float, float]:
         return API.crossroads_pos_list[self.visited_crossroads_ids[-1]]

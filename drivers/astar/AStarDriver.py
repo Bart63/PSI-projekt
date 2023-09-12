@@ -17,85 +17,62 @@ class AStarDriver(Driver):
         next_crossroad = find_next_crossroad(start_crossroad_id, direction)
         next_crossroad_id = calculate_crossroad_id(next_crossroad)
 
-        return Solution(next_crossroad_id, direction, [], last_stage)
+        return Solution(next_crossroad_id, direction,
+                        parent_solution=last_stage)
+
+    def explore_children_solutions(self, last_stage: Solution,
+                                   solutions_heap: list[Solution]):
+        possible_directions = API.possible_directions[
+            last_stage.visited_crossroads_ids[-1]]
+        for possible_direction in possible_directions:
+            new_solution = self.calculate_next_solution(last_stage,
+                                                        possible_direction)
+            heapq.heappush(solutions_heap, new_solution)
+
+    def find_visited_all_solution(self, solutions: list[Solution]):
+        while solutions:
+            last_stage = heapq.heappop(solutions)
+            if last_stage.visited_all():
+                return last_stage
+            self.explore_children_solutions(last_stage, solutions)
+        return None
 
     def calculate_best_solution(self):
         target_crossroad_id = calculate_crossroad_id(API.target_crossroad_pos)
+        points_to_visit: list[tuple[float, float]] = API.destinations_pos_list
         solutions: list[Solution] = [Solution(target_crossroad_id,
                                               API.main_vehicle_direction,
-                                              API.destinations_pos_list)]
-        while True:
-            if not solutions:
-                return None
-
-            last_stage = heapq.heappop(solutions)
-
-            if last_stage.visited_all_not_returned():
-                last_stage.points_to_visit.append(API.final_destination_pos)
-                last_stage.go_to_final_destination = True
-            if last_stage.visited_all_and_returned():
-                return last_stage
-
-            for possible_direction in API.possible_directions[
-                    last_stage.visited_crossroads_ids[-1]]:
-                new_solution = self.calculate_next_solution(last_stage,
-                                                            possible_direction)
-                heapq.heappush(solutions, new_solution)
-
-    def calculate_part_solution(self, how_many_destinations: int):
-        target_crossroad_id = calculate_crossroad_id(API.target_crossroad_pos)
-        points_to_visit = [self.destinations_order[i]
-                           for i in range(min(how_many_destinations,
-                                              len(self.destinations_order)))]
-        solutions: list[Solution] = [Solution(target_crossroad_id,
-                                              API.main_vehicle_direction,
-                                              points_to_visit)]
-        while True:
-            if not solutions:
-                return None
-
-            last_stage = heapq.heappop(solutions)
-
-            if last_stage.visited_all_not_returned() and \
-               len(last_stage.visited_points) < how_many_destinations:
-                last_stage.points_to_visit.append(API.final_destination_pos)
-                last_stage.go_to_final_destination = True
-            elif last_stage.visited_all_not_returned() or \
-                    last_stage.visited_all_and_returned():
-                return last_stage
-
-            for possible_direction in API.possible_directions[
-                    last_stage.visited_crossroads_ids[-1]]:
-                new_solution = self.calculate_next_solution(last_stage,
-                                                            possible_direction)
-                heapq.heappush(solutions, new_solution)
-
-    def calculate_destinations(self):
-        solution = self.calculate_best_solution()
+                                              points_to_visit,
+                                              len(points_to_visit))]
+        solution = self.find_visited_all_solution(solutions)
 
         if solution:
             self.destinations_order = solution.visited_points
-            self.direction_decisions = [solution.directions[i] for i in
-                                        range(1, len(solution.directions))]
-        else:
-            print('Failed to calculate road')
+            self.directions_decisions = [solution.directions[i] for i in
+                                         range(1, len(solution.directions))]
 
-    def calculate_directions(self):
-        solution = self.calculate_part_solution(FAST_ASTAR_DEST_NO)
+    def calculate_part_solution(self):
+        target_crossroad_id = calculate_crossroad_id(API.target_crossroad_pos)
+        points_to_visit = [self.destinations_order[i]
+                           for i in range(min(FAST_ASTAR_DEST_NO,
+                                              len(self.destinations_order)))]
+        solutions: list[Solution] = [Solution(target_crossroad_id,
+                                              API.main_vehicle_direction,
+                                              points_to_visit,
+                                              FAST_ASTAR_DEST_NO)]
+        solution = self.find_visited_all_solution(solutions)
 
         if solution:
             self.direction_decisions = [solution.directions[i] for i in
                                         range(1, len(solution.directions))]
-        else:
-            print('Failed to calculate road')
 
     def on_simulation_start(self):
         super().on_simulation_start()
-        self.calculate_destinations()
+        self.calculate_best_solution()
 
     def on_road_end(self):
         super().on_road_end()
         for point in self.destinations_order:
             if point not in API.destinations_pos_list:
                 self.destinations_order.remove(point)
-        self.calculate_directions()
+        self.calculate_part_solution()
