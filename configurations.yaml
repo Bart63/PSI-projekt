@@ -9,7 +9,15 @@ driver_tests:
             SEED: 123
             MAP_FILLING: 1
             NB_DUMMY_VEHICLES: 10
-    Driver_2:
+    GreedyDriver: 
+        Test_1:
+            SEED: 123
+            MAP_FILLING: 1
+            NB_DUMMY_VEHICLES: 10
+        Test_2:
+            SEED: 123
+            MAP_FILLING: 1
+            NB_DUMMY_VEHICLES: 10
     Driver_3:
     Driver_4:
     Driver_5:

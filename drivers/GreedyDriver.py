@@ -1,6 +1,9 @@
 # example implementation of driver
 from simulation.api import API
 from .Driver import Driver
+import random
+from simulation.utils.Direction import Direction
+import time
 
 
 class GreedyDriver(Driver):
@@ -9,30 +12,43 @@ class GreedyDriver(Driver):
         self.previous_decision = 0
 
     def on_road_start(self):
-        print("\n nowa droga \n")
+        ##print("\n nowa droga \n")
+        pass
 
     def on_road_end(self):
-        
-        a = 1
+        a = 0.7
         b = 1
-        print(API.target_crossroad_pos)
-        print(API.crossroads_pos_list.index(API.target_crossroad_pos))
-        print(API.roads_length_per_crossroad[4].values())
-        road_lenght_cost_list = [cost/ 400 for cost in API.roads_length_per_crossroad[API.crossroads_pos_list.index(API.target_crossroad_pos)].values()]
+
+        road_to_dest_costs = []
+        for i in API.target_crossroad_possible_directions:
+            if Direction(i) == Direction.UP:
+                road_to_dest_costs.append([(abs(API.destinations_pos_list[0][0] - API.target_crossroad_pos[0]) + abs(API.destinations_pos_list[0][1] - (API.target_crossroad_pos[1] - 40)))/400, Direction.UP])
+            if Direction(i) == Direction.RIGHT:
+                road_to_dest_costs.append([(abs(API.destinations_pos_list[0][0] - (API.target_crossroad_pos[0] + 40)) + abs(API.destinations_pos_list[0][1] - API.target_crossroad_pos[1]))/400, Direction.RIGHT])
+            if Direction(i) == Direction.DOWN:
+                road_to_dest_costs.append([(abs(API.destinations_pos_list[0][0] - (API.target_crossroad_pos[0])) + abs(API.destinations_pos_list[0][1] - (API.target_crossroad_pos[1] + 40)))/400, Direction.DOWN])
+            if Direction(i) == Direction.LEFT:
+                road_to_dest_costs.append([(abs(API.destinations_pos_list[0][0] - (API.target_crossroad_pos[0] - 40)) + abs(API.destinations_pos_list[0][1] - (API.target_crossroad_pos[1])))/400, Direction.LEFT])
+
         road_occupancy_cost_list = [occupancy/ 10 for occupancy in API.cars_on_road[API.crossroads_pos_list.index(API.target_crossroad_pos)].values()]
-        print(road_lenght_cost_list)
-        print(road_occupancy_cost_list)
+        
+        cost = [[a * road_to_dest_cost[0] + b * road_occupancy_cost, road_to_dest_cost[1]] for road_to_dest_cost, road_occupancy_cost in zip(road_to_dest_costs, road_occupancy_cost_list)]
+        cost = sorted(cost, key=lambda x: x[0])
 
-        cost = [a * road_lenght_cost + b * road_occupancy_cost for road_lenght_cost, road_occupancy_cost in zip(road_lenght_cost_list, road_occupancy_cost_list)]
-        print(cost)
-
-        self.direction_decisions = API.target_crossroad_possible_directions
-        sorted_labels = sorted(self.direction_decisions, key=lambda label: cost[self.direction_decisions.index(label)])
-        cost = sorted(cost)
-        self.direction_decisions = list(self.direction_decisions)
+        self.direction_decisions = [x[1] for x in cost]
+    
         if self.previous_decision !=0 and self.direction_decisions[0].get_reverse() == self.previous_decision:
             self.direction_decisions.pop(0)
-        print(self.direction_decisions)
-        print(cost)
+
+        # if all_equal(cost):
+        #     random.shuffle(self.direction_decisions)
+
         self.previous_decision = self.direction_decisions[0]
 
+# def all_equal(iterator):
+#     iterator = iter(iterator)
+#     try:
+#         first = next(iterator)
+#     except StopIteration:
+#         return True
+#     return all(first == x for x in iterator)

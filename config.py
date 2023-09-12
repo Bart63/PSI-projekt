@@ -20,7 +20,7 @@ TRAFFIC_LIGHTS_CHANGE_PERC = 1
 
 # Simulation config
 SEED = 0
-WAIT_MS = 10
+WAIT_MS = 1
 
 # Vehicle speed
 VEHICLE_PROGRESS_STEP = 1
