@@ -30,4 +30,8 @@ class Driver:
         pass
 
     def get_direction_decisions(self) -> Direction:
-        return self.direction_decisions and self.direction_decisions.pop(0)
+        return self.direction_decisions and self.direction_decisions[0]
+
+    def remove_direction_decision(self) -> None:
+        if self.direction_decisions:
+            self.direction_decisions.pop(0)

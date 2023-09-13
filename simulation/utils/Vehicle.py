@@ -24,6 +24,9 @@ class Vehicle:
     
     def get_direction_decision(self) -> Direction:
         return self.driver.get_direction_decisions()
+
+    def remove_direction_decision(self) -> None:
+        self.driver.remove_direction_decision()
   
     def get_position(self):
         return self.x, self.y

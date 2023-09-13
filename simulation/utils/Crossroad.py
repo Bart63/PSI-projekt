@@ -85,6 +85,7 @@ class Crossroad:
         if chosen_direction not in possible_directions:
             chosen_direction = self.rng.choice(possible_directions)
         if next_crossroad.can_enqueue(chosen_direction):
+            vqe.vehicle.remove_direction_decision()
             self.vehicle_queue[direction].queue.remove(vqe)
             next_crossroad.enqueue_vehicle(vqe.vehicle, chosen_direction)
 
