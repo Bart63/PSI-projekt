@@ -147,9 +147,6 @@ class SPED(Driver):
         direction = API.main_vehicle_direction.value
         self.map_state_tensor[18 + direction][int(pos[1])][int(pos[0])] = 1
 
-    def get_direction_decisions(self) -> Direction:
-        return self.direction_decisions and self.direction_decisions.pop(0)
-
     def get_direction_from_idx(self, idx):
         if idx == 1:
             return Direction.UP
