@@ -36,12 +36,13 @@ class GreedyDriver(Driver):
         cost = sorted(cost, key=lambda x: x[0])
 
         self.direction_decisions = [x[1] for x in cost]
-    
-        if self.previous_decision !=0 and self.direction_decisions[0].get_reverse() == self.previous_decision:
+
+
+        if self.previous_decision !=0 and self.direction_decisions[0].get_reverse() == self.previous_decision and len(self.direction_decisions) != 1:
             self.direction_decisions.pop(0)
 
-        # if all_equal(cost):
-        #     random.shuffle(self.direction_decisions)
+        # # if all_equal(cost):
+        # #     random.shuffle(self.direction_decisions)
 
         self.previous_decision = self.direction_decisions[0]
 
