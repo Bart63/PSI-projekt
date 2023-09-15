@@ -11,7 +11,7 @@ import cv2
 import time
 from .utils.YamlConfigParser import set_yaml_config
 
-DESTINATION_REACH_DISTANCE = 1
+DESTINATION_REACH_DISTANCE = 2
 
 
 class Simulation:
