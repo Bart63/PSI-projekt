@@ -4,18 +4,21 @@ from drivers import GreedyDriver
 MAIN_VEHICLE_DRIVER = GreedyDriver()
 
 # Map config
-WIDTH = 250
-HEIGHT = 250
+WIDTH = 400
+HEIGHT = 400
 
 # Roads config
-MAP_FILLING = 0.6
+MAP_FILLING = 1
 ROAD_PADDING = 40
 
+# Number of destinations 
+NB_DESTINATIONS = 5
+
 # Vehicles config
-NB_DUMMY_VEHICLES = 10
+NB_DUMMY_VEHICLES = 2
 
 # Traffic lights config
-TRAFFIC_LIGHTS_CHANGE_TICKS = 40
+TRAFFIC_LIGHTS_CHANGE_TICKS = 5
 TRAFFIC_LIGHTS_CHANGE_PERC = 1
 
 # Simulation config

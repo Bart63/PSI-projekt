@@ -1,12 +1,12 @@
 from .utils import Vehicle, Crossroad, CrossroadsGenerator, DestinationsGenerator, Destination
 from drivers import DummyDriver
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
 
 class Map:
-    def __init__(self, size: tuple[int, int], seed: int, road_padding=50, map_filling=1, vehicles_number=10, driver=DummyDriver):
+    def __init__(self, size: Tuple[int, int], seed: int, road_padding=50, map_filling=1, vehicles_number=10, nb_destinations=1, driver=DummyDriver):
         self.vehicles: List[Vehicle] = []
         self.main_vehicle: Vehicle = None
         self.crossroads: List[Crossroad] = []
@@ -19,7 +19,7 @@ class Map:
         self.crossroads = crossroad_generator.generate_crossroads()
         crossroad_generator.connect_crossroads(self.crossroads)
 
-        self.destinations = DestinationsGenerator.create(self.crossroads, self.rng).generate(10)
+        self.destinations = DestinationsGenerator.create(self.crossroads, self.rng).generate(nb_destinations)
 
         self.__add_vehicles(vehicles_number)
 

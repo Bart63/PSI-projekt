@@ -36,7 +36,7 @@ def plot_map(map: Map, connect_lvl=2):
                     cv2.line(canvas, (x, y), (x - int(road_padding * connect_lvl), y), (0, 0, 0), 1)  # Leftward line
 
     cv2.namedWindow('Map', cv2.WINDOW_NORMAL)
-    cv2.imshow("Map", canvas)
+    cv2.imshow('Map', canvas)
 
 def plot_traffic_lights(traffic_lights: TrafficLights, canvas, x, y, width=10):
     connections_dirs = traffic_lights.connections_dirs
