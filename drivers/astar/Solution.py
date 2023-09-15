@@ -98,4 +98,4 @@ class Solution():
         crossroads_left = (len(self.points_to_visit) + int(
             not self.go_to_final_destination) + 1) * \
             len(self.visited_crossroads_ids) / (len(self.visited_points) + 1)
-        self.heuristic_cost = min_adv_distance / crossroads_left
+        self.heuristic_cost = min_adv_distance * crossroads_left
