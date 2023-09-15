@@ -1,8 +1,8 @@
-from drivers.BFS.BFSDriver import BFSDriver
+from drivers.Naive.NaiveDriver import NaiveDriver
 
 # Main vehicle config
 # MAIN_VEHICLE_DRIVER = DummyDriver()
-MAIN_VEHICLE_DRIVER = BFSDriver()
+MAIN_VEHICLE_DRIVER = NaiveDriver()
 
 # Map config
 WIDTH = 400
