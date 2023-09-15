@@ -1,6 +1,7 @@
 import numpy as np
+from drivers.Driver import Driver
+from simulation.api import API
 from simulation.utils.Direction import Direction
-
 
 DIRECTIONS = [[0, -1], [1, 0], [0, 1], [-1, 0]]
 
@@ -99,3 +100,25 @@ def run_BFS(map: np.ndarray, car_pos: [float, float]):
             # If new node wasn't visited before, and it is not another car, append it to stack and mark as visited.
             stack.append(Node(x=new_x, y=new_y, parent=position))
             map[new_x, new_y] = visited_node
+
+
+class BFSDriver(Driver):
+    def __init__(self):
+        super().__init__()
+        self.previous_decision = 0
+
+    def on_simulation_start(self):
+        print("BFS Driver started!")
+
+    def on_road_start(self):
+        '''First tick after switching to a new road'''
+        pass
+
+    def on_tick(self):
+        pass
+
+    def on_road_end(self):
+        self.direction_decisions = [Direction.RIGHT]
+
+    def get_direction_decisions(self) -> Direction:
+        return self.direction_decisions and self.direction_decisions.pop(0)
